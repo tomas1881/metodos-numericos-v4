@@ -8,6 +8,14 @@ import os
 
 app = Flask(__name__)
 
+CORS(app, resources={
+    r"/*": {
+        "origins": "*",
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"]
+    }
+})
+
 @app.route("/")
 def home():
     return "API funcionando"
@@ -15,7 +23,7 @@ def home():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
-    
+
 # Convertir sintaxis MATLAB a Python
 def matlab_to_python(expression):
     expr = expression.strip()
