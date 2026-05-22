@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000';
+// CAMBIAR ESTO - Usar la URL de Render
+const API_URL = 'https://metodos-numericos-v4-1.onrender.com';
 
 const api = axios.create({
   baseURL: API_URL,
