@@ -12,9 +12,7 @@ export default function Biseccion() {
   const [error, setError] = useState(null);
   const [mostrarIter, setMostrarIter] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const ejecutarCalculo = async () => {
     if (!funcion) { setError('Ingresa la función'); return; }
     if (!a) { setError('Ingresa el límite inferior a'); return; }
     if (!b) { setError('Ingresa el límite superior b'); return; }
@@ -38,6 +36,11 @@ export default function Biseccion() {
     } finally {
       setCargando(false);
     }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    void ejecutarCalculo();
   };
 
   return (

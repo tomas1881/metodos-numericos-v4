@@ -10,9 +10,7 @@ export default function Trapecio() {
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const ejecutarCalculo = async () => {
     if (!funcion) { setError('Ingresa la función'); return; }
     if (!a) { setError('Ingresa el límite inferior a'); return; }
     if (!b) { setError('Ingresa el límite superior b'); return; }
@@ -34,6 +32,11 @@ export default function Trapecio() {
     } finally {
       setCargando(false);
     }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    void ejecutarCalculo();
   };
 
   return (

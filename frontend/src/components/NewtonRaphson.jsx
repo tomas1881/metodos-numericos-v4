@@ -11,9 +11,7 @@ export default function NewtonRaphson() {
   const [error, setError] = useState(null);
   const [mostrarIter, setMostrarIter] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const ejecutarCalculo = async () => {
     if (!funcion) { setError('Ingresa la función'); return; }
     if (!x0) { setError('Ingresa el valor inicial x0'); return; }
 
@@ -33,6 +31,11 @@ export default function NewtonRaphson() {
     } finally {
       setCargando(false);
     }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    void ejecutarCalculo();
   };
 
   return (

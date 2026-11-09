@@ -36,7 +36,7 @@ function App() {
   };
 
   useEffect(() => {
-    cargarMetodos();
+    void cargarMetodos();
   }, []);
 
   if (!conectado) {
@@ -50,7 +50,11 @@ function App() {
             <br />
             <code className="bg-gray-100 px-2 py-1 rounded mt-2 block">http://localhost:5000</code>
           </p>
-          <button type="button" onClick={cargarMetodos} className="bg-purple-600 text-white px-4 py-2 rounded-lg">
+          <button
+            type="button"
+            onClick={() => { void cargarMetodos(); }}
+            className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700"
+          >
             Reintentar
           </button>
         </div>

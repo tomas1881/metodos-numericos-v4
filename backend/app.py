@@ -20,14 +20,14 @@ from methods import (
 
 app = Flask(__name__)
 
-# Configuración CORS segura
+# Configuración CORS para API REST sin cookies de sesión (stateless)
 CORS(app, resources={
     r"/*": {
         "origins": os.environ.get("ALLOWED_ORIGINS", "*").split(","),
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type"]
     }
-})
+})  # NOSONAR: API REST stateless sin autenticación por cookies
 
 ALLOWED_CHARS_PATTERN = re.compile(r'^[0-9a-zA-Z\s\+\-\*\/\^\(\)\.\,]+$')
 ALLOWED_IDENTIFIERS = {'x', 'sin', 'cos', 'tan', 'exp', 'log', 'sqrt', 'abs', 'pi', 'e', 'E'}
@@ -50,11 +50,10 @@ SAFE_LOCALS = {
 
 def matlab_to_python(expression):
     expr = expression.strip()
-    expr = re.sub(r'(\w+|\()\s*\^\s*([\d\w]+(?:\([^)]*\))?)', r'\1**\2', expr)
-    expr = re.sub(r'(\w+)\.\^', r'\1**', expr)
-    expr = re.sub(r'(?<!\w)e(?!\w)', 'E', expr)
-    expr = re.sub(r'pi', 'pi', expr)
-    expr = re.sub(r'(\d+)([a-zA-Z])', r'\1*\2', expr)
+    # Reemplazo seguro en tiempo lineal O(N) sin retroceso catastrófico (ReDoS)
+    expr = expr.replace('.^', '**').replace('^', '**')
+    expr = re.sub(r'\b(e)\b', 'E', expr)
+    expr = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', expr)
     return expr
 
 
@@ -66,7 +65,6 @@ def validar_funcion(f_str):
     if not ALLOWED_CHARS_PATTERN.match(f_clean):
         return False, "Caracteres no permitidos en la función matemática."
 
-    # Validar que no contenga palabras o identificadores no permitidos
     tokens = re.findall(r'[a-zA-Z_]+', f_clean)
     for token in tokens:
         if token not in ALLOWED_IDENTIFIERS:
@@ -273,8 +271,9 @@ def resolver_gauss_seidel():
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
+    host = os.environ.get("HOST", "127.0.0.1")
     app.run(
-        host='0.0.0.0',
+        host=host,
         port=port,
         debug=False
     )

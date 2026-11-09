@@ -20,7 +20,7 @@ export default function Interpolacion() {
   };
 
   useEffect(() => {
-    cargarTipos();
+    void cargarTipos();
   }, []);
 
   const agregarPunto = () => {
@@ -41,9 +41,7 @@ export default function Interpolacion() {
     setPuntos(nuevos);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const ejecutarCalculo = async () => {
     const xPoints = puntos.map(p => parseFloat(p.x));
     const yPoints = puntos.map(p => parseFloat(p.y));
 
@@ -67,6 +65,11 @@ export default function Interpolacion() {
     } finally {
       setCargando(false);
     }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    void ejecutarCalculo();
   };
 
   return (
